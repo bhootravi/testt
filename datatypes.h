@@ -1,5 +1,5 @@
-#ifndef UTIL_H_
-#define UTIL_H_
+#ifndef DATATYPES_H_
+#define DATATYPES_H_
 
 #include <inttypes.h>
 
@@ -38,34 +38,27 @@ typedef struct
 typedef struct 
 {
 	co_ord cur_loc;
-	double speed;
+	float speed;
 	timeDate_struct timeDate;  
 }gps_data;
 
 typedef struct
 {
-	uint8_t name_eng[STA_NAME_LEN];
-	uint8_t name_hin[STA_NAME_LEN];
-	uint8_t name_reg[STA_NAME_LEN];
-}station_name;
+	timeDate_struct arrival;
+	timeDate_struct departure;
+	uint8_t platform_no;
+}halt_details;
 
 typedef struct
 {
 	uint8_t code[STA_CODE_LEN];
 	co_ord location;
 	uint8_t reg_lang;
-	station_name* name;
+	uint8_t name_eng[STA_NAME_LEN];
+	uint8_t name_hin[STA_NAME_LEN];
+	uint8_t name_reg[STA_NAME_LEN];
+	halt_details* halt;
 }station;
-
-typedef struct halt_details
-{
-	station* sta;
-	timeDate_struct arrival;
-	timeDate_struct departure;
-	uint8_t platform_no;
-	struct halt_station* prev;
-	struct halt_station* next;
-}halt_station;
 
 typedef struct
 {
@@ -76,12 +69,11 @@ typedef struct
 	uint16_t stops;
 	station* src;
 	station* dest;
-	halt_station* tt_head;
 	//????//halt_station* tt_tail;
 	uint8_t type;
 	uint8_t direction;
 	////////intermediate stops
-}train;
+}train_struct;
 
 typedef enum
 {
@@ -102,14 +94,21 @@ typedef enum
 
 typedef struct
 {
-	train* train_data;
+	train_struct* train_data;
+	
+	station* cur_sta;
+	station* next_sta;
+	
 	gps_data cur_gps_data;
-	halt_station* prev_sta;
-	halt_station* next_sta;
-	halt_station* cur_sta;
+	
+	float dist_to_next_sta;
+	float dist_to_dest_sta;
+	
+	time_struct late_duration;
+	
 	tracker_state_enum cur_tracker_state;
 	tracker_state_enum prev_tracker_state;
-}train_status;
+}train_status_struct;
 
 
 #endif

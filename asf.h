@@ -102,6 +102,12 @@
 // From module: System Clock Control - SAM4S implementation
 #include <sysclk.h>
 
+// From module: UART - Univ. Async Rec/Trans
+#include <uart.h>
+
+// From module: USART - Univ. Syn Async Rec/Trans
+#include <usart.h>
+
 // From module: pio_handler support enabled
 #include <pio_handler.h>
 

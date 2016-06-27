@@ -1,8 +1,10 @@
 #ifndef TRACKER_H_
 #define TRACKER_H_
 
+#include "util.h"
 #include "datatypes.h"
 #include "gps.h"
+
 /*
 enum tracker_states
 {
@@ -20,7 +22,7 @@ enum tracker_states
 	ERROR
 };
 */
-extern train* cur_train;
+extern train_struct* cur_train;
 extern station* prev_sta, cur_sta, next_sta;
 
 station* get_next_station(void);

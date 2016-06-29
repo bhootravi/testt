@@ -12,6 +12,11 @@ uint8_t flags_1 = 0;
 
 float temp_dist = 0;
 
+//updates the tracker status using the new gps data
+//assigns the relevant messages for audio and display
+//requires 
+//new gps data to to be updated in the train status struct
+
 int tracker_process()
 {
 	//gps_get_data();
@@ -20,7 +25,8 @@ int tracker_process()
 	//if data received is valid
 	if(x == 0)
 	{
-		//compute the distance to next station
+		//compute the distance to dest station
+		//WON'T WORK
 		train_status.dist_to_dest_sta = distance_between
 							(train_status.cur_gps_data.cur_loc, 
 								train_status.train_data->dest->location);
@@ -37,7 +43,7 @@ int tracker_process()
 				{
 					train_status.cur_tracker_state = CROSSED_1KM;
 				
-					x = temp_dist;
+					temp_dist = train_status.dist_to_dest_sta;
 						
 					//update message
 					//repeat times 3 audio, display loop
@@ -76,7 +82,7 @@ int tracker_process()
 				{
 					train_status.cur_tracker_state = CROSSED_1KM;
 					
-					x = temp_dist;
+					temp_dist = train_status.dist_to_dest_sta;
 					
 					//free train_status.cur_sta
 					train_status.cur_sta = train_status.next_sta;
@@ -89,7 +95,7 @@ int tracker_process()
 				//check next sta data updated flag
 				
 				//adjustment to avoid storage of prev station
-				if((RelDif(train_status.dist_to_dest_sta, x - 2.0) < TOLERANCE_DIF))
+				if((RelDif(train_status.dist_to_dest_sta, temp_dist - 2.0) < TOLERANCE_DIF))
 				{
 					train_status.cur_tracker_state = CROSSED_3KM;
 					
@@ -97,9 +103,9 @@ int tracker_process()
 					//repeat times 3 audio, display loop
 				}
 			case CROSSED_3KM:
-				if((RelDif(train_status.dist_to_dest_sta, x - 4.0) < TOLERANCE_DIF))
+				if((RelDif(train_status.dist_to_dest_sta, temp_dist - 4.0) < TOLERANCE_DIF))
 				{
-					x = -500.0;
+					temp_dist = -500000.0;
 					train_status.cur_tracker_state = ENROUTE;
 				
 					//update message
@@ -110,9 +116,8 @@ int tracker_process()
 				break;
 			case ERROR:
 			case WRONG_DIRECTION:
-			case GPS_LOST:
-				//put default error message
-				break;
+				//decide the position and status
+				//break;
 			case GPS_WEAK:
 				//put slogan and error message
 				break;	
@@ -121,6 +126,7 @@ int tracker_process()
 	else
 	{
 		
+		//put default error message
 	}
 	return 0;
 }

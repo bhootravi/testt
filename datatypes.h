@@ -87,7 +87,7 @@ typedef enum
 	CROSSED_3KM,
 	WRONG_DIRECTION,
 	GPS_WEAK,
-	GPS_LOST,
+	//GPS_LOST,
 	ERROR
 }tracker_state_enum;
 
@@ -105,6 +105,8 @@ typedef struct
 	float dist_to_dest_sta;
 	
 	time_struct late_duration;
+	
+	timeDate_struct last_update_time;
 	
 	tracker_state_enum cur_tracker_state;
 	tracker_state_enum prev_tracker_state;

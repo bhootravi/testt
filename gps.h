@@ -1,7 +1,12 @@
 #ifndef GPS_H_
 #define GPS_H_
 
-#include <uart.h>
+/*
+Provides helper functions for tracker to:
+	get periodic updates of location, time and speed data
+	recover from fix lost or error conditions
+	change settings(update intervals, serial config)
+*/
 
 void gps_init(void);
 

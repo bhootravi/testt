@@ -23,6 +23,8 @@
  */
 #include <asf.h>
 #include "tracker.h"
+#include "graphicLcd.h"
+
 //#include "ASF/sam/utils/cmsis/sam4s/include/component/component_uart.h"
 int gps_data_rx = 0;
 
@@ -30,17 +32,7 @@ uint8_t common_buf[200];
 volatile uint8_t tx_flag = 0;
 uint8_t* buf_tx_ptr = &common_buf[0];
 
-void GPS_SERIAL_Handler(void)
-{
-	uint32_t ua_status;
-	ua_status = usart_get_status(GPS_SERIAL);
-	if(ua_status & US_CSR_RXRDY)
-	{
-		uint32_t t;
-		usart_getchar(GPS_SERIAL, &t);
-		uart_write(DEBUG_SERIAL, t&0xff);
-	}
-}
+
 	
 /*
 int self_test(void)
@@ -61,6 +53,8 @@ int main (void)
 	board_init();
 	
 	uart_h_init();
+	ioport_init();
+	graphicLcd_init();
 	//sam_uart_opt uart0_settings;
 	/* Insert application code here, after the board has been initialized. */
 	int t = 0;
@@ -68,12 +62,24 @@ int main (void)
 	common_buf[0] = 'a';
 	common_buf[1] = 'b';
 	common_buf[2] = 'c';
-	//int x = sysclk_get_peripheral_hz();
-	//itoa(x, &common_buf[3], 8);
 	common_buf[3] = 'd';
+	
+	
 	
 	while(1)
 	{
+		Vertical_line();
+		delay_ms(4);		Horizontal_line();		delay_ms(4);		Cross_Dot();		delay_ms(4);		Show_picture();
+		delay_ms(4);
+		Character_pattern();
+		delay_ms(4);
+		
+		if(uart_is_tx_ready(DEBUG_SERIAL))
+		{
+			uart_write(DEBUG_SERIAL, 's');
+		}
+		delay_s(1);
+		/*
 		if(t < 10 && uart_is_tx_ready(DEBUG_SERIAL))
 		{
 			uart_write(DEBUG_SERIAL, *buf_tx_ptr);
@@ -85,14 +91,9 @@ int main (void)
 				t++;
 			}
 		}
-		/*
-		if(t < 10 && usart_is_tx_ready(USART_SERIAL))
-		{
-			t++;
-			usart_write(USART_SERIAL, 'a');
-		}
 		*/
 	}
+	
 	/*
 	int x = 0;
 	

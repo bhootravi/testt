@@ -8,6 +8,9 @@ Provides helper functions for tracker to:
 	change settings(update intervals, serial config)
 */
 
+#include "minmea.h"
+
+
 void gps_init(void);
 
 void gps_get_data(void);

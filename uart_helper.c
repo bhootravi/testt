@@ -2,6 +2,18 @@
 
 //const sam_uart_opt_t uart0_settings;
 
+void GPS_SERIAL_Handler(void)
+{
+	uint32_t ua_status;
+	ua_status = usart_get_status(GPS_SERIAL);
+	if(ua_status & US_CSR_RXRDY)
+	{
+		uint32_t t;
+		usart_getchar(GPS_SERIAL, &t);
+		uart_write(DEBUG_SERIAL, t&0xff);
+	}
+}
+
 
 void uart_h_init()
 {
@@ -9,7 +21,7 @@ void uart_h_init()
 	uint32_t xxx = sysclk_get_peripheral_hz();
 	const sam_uart_opt_t debug_usart_settings = {
 		xxx,
-		9600,
+		115200,
 		UART_MR_PAR_NO | UART_MR_CHMODE_NORMAL
 	};
 	/*
@@ -47,7 +59,7 @@ void uart_h_init()
 		GPS_SERIAL_STOP_BIT,
 		US_MR_CHMODE_NORMAL
 	};	
-	
+	/*
 	sysclk_enable_peripheral_clock(GPS_SERIAL_ID);
 	usart_init_rs232(GPS_SERIAL, &gps_usart_settings, 
 						sysclk_get_peripheral_hz());
@@ -56,4 +68,5 @@ void uart_h_init()
 	usart_disable_interrupt(GPS_SERIAL, ALL_INTERRUPT_MASK);
 	usart_enable_interrupt(GPS_SERIAL, US_IER_RXRDY);
 	NVIC_EnableIRQ(GPS_SERIAL_IRQn);	
+	*/
 }

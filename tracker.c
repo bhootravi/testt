@@ -39,7 +39,7 @@ int tracker_process()
 		{
 			case SOURCE:
 				//opposite bearings
-				if((RelDif(train_status.dist_to_next_sta, 1000.0) < TOLERANCE_DIF))
+				if((relative_difference(train_status.dist_to_next_sta, 1000.0) < TOLERANCE_DIF))
 				{
 					train_status.cur_tracker_state = CROSSED_1KM;
 				
@@ -50,7 +50,7 @@ int tracker_process()
 				}
 			case ENROUTE:
 				//if course over ground == bearing of the station
-				if((RelDif(train_status.dist_to_next_sta, 5000.0) < TOLERANCE_DIF))
+				if((relative_difference(train_status.dist_to_next_sta, 5000.0) < TOLERANCE_DIF))
 				{
 					train_status.cur_tracker_state = TOGO_5KM;
 					//update message
@@ -58,14 +58,14 @@ int tracker_process()
 				}
 			case TOGO_5KM:
 				//if course over ground == bearing of the station
-				if((RelDif(train_status.dist_to_next_sta, 1000.0) < TOLERANCE_DIF))
+				if((relative_difference(train_status.dist_to_next_sta, 1000.0) < TOLERANCE_DIF))
 				{
 					train_status.cur_tracker_state = TOGO_1KM;
 					//update message
 					//repeat times 3 audio and display
 				}
 			case TOGO_1KM:
-				if((RelDif(train_status.dist_to_next_sta, 50.0) < TOLERANCE_DIF))
+				if((relative_difference(train_status.dist_to_next_sta, 50.0) < TOLERANCE_DIF))
 				{
 					train_status.cur_tracker_state = STATION_REACHED;
 					if (train_status.next_sta == NULL)
@@ -78,7 +78,7 @@ int tracker_process()
 				}
 			case STATION_REACHED:				
 				//opposite bearings										
-				if((RelDif(train_status.dist_to_next_sta, 1000.0) < TOLERANCE_DIF))
+				if((relative_difference(train_status.dist_to_next_sta, 1000.0) < TOLERANCE_DIF))
 				{
 					train_status.cur_tracker_state = CROSSED_1KM;
 					
@@ -95,7 +95,7 @@ int tracker_process()
 				//check next sta data updated flag
 				
 				//adjustment to avoid storage of prev station
-				if((RelDif(train_status.dist_to_dest_sta, temp_dist - 2.0) < TOLERANCE_DIF))
+				if((relative_difference(train_status.dist_to_dest_sta, temp_dist - 2.0) < TOLERANCE_DIF))
 				{
 					train_status.cur_tracker_state = CROSSED_3KM;
 					
@@ -103,7 +103,7 @@ int tracker_process()
 					//repeat times 3 audio, display loop
 				}
 			case CROSSED_3KM:
-				if((RelDif(train_status.dist_to_dest_sta, temp_dist - 4.0) < TOLERANCE_DIF))
+				if((relative_difference(train_status.dist_to_dest_sta, temp_dist - 4.0) < TOLERANCE_DIF))
 				{
 					temp_dist = -500000.0;
 					train_status.cur_tracker_state = ENROUTE;

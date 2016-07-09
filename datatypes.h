@@ -10,6 +10,15 @@
 
 typedef struct  
 {
+	uint8_t *buf_ptr;
+	uint16_t len;
+	uint8_t *ptr;
+	uint16_t eol[8];
+	uint8_t eol_i;
+}buf_struct;
+
+typedef struct  
+{
 	float lat;
 	float lon;
 }co_ord;

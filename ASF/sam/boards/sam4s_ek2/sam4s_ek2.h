@@ -274,11 +274,13 @@
 #endif
 
 #ifdef BOARD_REV_B
+/*
 #define PIN_HSMCI_CD {PIO_PA6, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP}
 #define SD_MMC_0_CD_GPIO            (PIO_PA6_IDX)
 #define SD_MMC_0_CD_PIO_ID          ID_PIOA
 #define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
 #define SD_MMC_0_CD_DETECT_VALUE    0
+*/
 #endif
 
 /** Push button #0 definition. Attributes = pull-up + debounce + interrupt on rising edge. */

@@ -5,10 +5,10 @@
 
 #define   MaxColumn    240              //  128 * 64 ~ 240 *128
 #define   MaxRow       128              //
-
+#define		SINGLE_DELAY	1
 #define	  graphic_home_address  ((MaxColumn /8) *(MaxRow/8))
 #define   LOW_BYTE 	(graphic_home_address % 0x0100)
-#define   HI_BYTE  	(graphic_home_address / 0x0100)
+#define   HI_BYTE  	(graphic_home_address / 0x0100)#define is_capital(x) ((((x) > 0x40) && ((x) < 0x5B)) ? 1 : 0)#define is_small(x) ((((x) > 0x60) && ((x) < 0x7B)) ? 1 : 0)#define is_num(x) ((((x) >= 0x30) && ((x) < 0x40)) ? 1 : 0)
 //=================================
 //  I/O define
 //=================================
@@ -53,7 +53,7 @@ void home_address(void);
 void Horizontal_line(void);
 void full_on(void);
 void Initial_T6963C(void);
-void Character_pattern(void);
+void Character_pattern(void);void print_str(uint8_t* in);
 uint8_t Read_status(void);
 void Status_check(uint8_t);
 void SYSCLK_Init (void);

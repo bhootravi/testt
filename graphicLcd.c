@@ -33,13 +33,13 @@ void Initial_T6963C()
 	uint8_t    LOW_BYTE1;
 
 	ioport_set_pin_level(LCD_RESET_PIN, 0);
-	delay_ms(1);
-	delay_us(100);
-	delay_us(100);
+	delay_us(SINGLE_DELAY);
+	delay_us(SINGLE_DELAY);
+	delay_us(SINGLE_DELAY);
 	ioport_set_pin_level(LCD_RESET_PIN, 1);
-	delay_ms(1);
-	delay_us(100);
-	delay_us(100);	
+	delay_us(SINGLE_DELAY);
+	delay_us(SINGLE_DELAY);
+	delay_us(SINGLE_DELAY);	
 	ioport_set_pin_level(LCD_FS_PIN, 0);
 	ioport_set_port_dir(LCD_DATA_PORT,LCD_DATA_MASK,IOPORT_DIR_OUTPUT); 
 	uart_write(DEBUG_SERIAL,'c');
@@ -91,9 +91,10 @@ void Initial_T6963C()
 //-------------------------------------------------
 void Write_data(uint8_t data){
 		ioport_set_port_dir(LCD_DATA_PORT,LCD_DATA_MASK,IOPORT_DIR_OUTPUT); 	//LCD_DATA_PORT = datap << LCD_DATA_MASK;	ioport_set_port_level(LCD_DATA_PORT,LCD_DATA_MASK, (data << LCD_SHIFT));	ioport_set_pin_level(LCD_DIR_PIN, 1); 	ioport_set_pin_level(LCD_CD_PIN, 0); 
-	delay_us(100);	ioport_set_pin_level(LCD_CE_PIN, 0); 	delay_us(100);	ioport_set_pin_level(LCD_WR_PIN, 0); 
-	delay_us(200);	ioport_set_pin_level(LCD_CE_PIN, 1); 
-	delay_us(100);
+	delay_us(SINGLE_DELAY);	ioport_set_pin_level(LCD_CE_PIN, 0); 	delay_us(SINGLE_DELAY);	ioport_set_pin_level(LCD_WR_PIN, 0); 
+	delay_us(SINGLE_DELAY);
+	delay_us(SINGLE_DELAY);	ioport_set_pin_level(LCD_CE_PIN, 1); 
+	delay_us(SINGLE_DELAY);
 	ioport_set_pin_level(LCD_WR_PIN, 1); }
 //-------------------------------------------------
 //     WRITE_COMMAND
@@ -104,9 +105,10 @@ void Write_command(uint8_t command){
 	//LCD_DATA_PORT = command << LCD_DATA_MASK;
 	ioport_set_port_level(LCD_DATA_PORT,LCD_DATA_MASK,(command << LCD_SHIFT));
 	ioport_set_pin_level(LCD_DIR_PIN, 1);	ioport_set_pin_level(LCD_CD_PIN, 1);
-	delay_us(100);	ioport_set_pin_level(LCD_CE_PIN, 0);	delay_us(100);	ioport_set_pin_level(LCD_WR_PIN, 0);
-	delay_us(200);	ioport_set_pin_level(LCD_CE_PIN, 1);
-	delay_us(100);
+	delay_us(SINGLE_DELAY);	ioport_set_pin_level(LCD_CE_PIN, 0);	delay_us(SINGLE_DELAY);	ioport_set_pin_level(LCD_WR_PIN, 0);
+	delay_us(SINGLE_DELAY);
+	delay_us(SINGLE_DELAY);	ioport_set_pin_level(LCD_CE_PIN, 1);
+	delay_us(SINGLE_DELAY);
 	ioport_set_pin_level(LCD_WR_PIN, 1);
 }
 //-------------------------------------------------
@@ -164,6 +166,12 @@ void Show_picture()
 	uint8_t x,y;
 	Status_check(0x03);
 	Write_command(0x98);
+		Status_check(0x03);
+		Write_data(LOW_BYTE);
+		Status_check(0x03);
+		Write_data(HI_BYTE);
+		Status_check(0x03);
+		Write_command(0x24);
 	home_address();
 	Status_check(0x03);
 	Write_command(0xB0);
@@ -183,11 +191,41 @@ void Show_picture()
 void home_address()
 {
 	Status_check(0x03);
-	Write_data(LOW_BYTE);
+	Write_data(0);
+	//Write_data(LOW_BYTE);
 	Status_check(0x03);
-	Write_data(HI_BYTE);
+	Write_data(0);
+	//Write_data(HI_BYTE);
+	Status_check(0x03);
+	Write_command(0x21);
+}
+
+
+void print_str(uint8_t* in)
+{
+	uint8_t k=0;
+	Status_check(0x03);
+	Write_command(0x94);
+	Status_check(0x03);
+	Write_data(0x00);
+	Status_check(0x03);
+	Write_data(0x00);
 	Status_check(0x03);
 	Write_command(0x24);
+	Status_check(0x03);
+	Write_command(0xB0);
+	while(*in)
+	{
+		if(is_capital(*in))
+			k = *in - 0x40 + 0x20;
+		else if(is_small(*in))
+			k = *in - 0x60 + 0x40;
+		Status_check(0x08);
+		Write_data(k);
+		in++;
+	}
+	Status_check(0x08);
+	Write_command(0xB2); //set auto write reset
 }
 
 
@@ -323,7 +361,7 @@ void Horizontal_line()
 
 void full_on()
 {
-	uint8_t x,y,status=0;
+	uint8_t x,y;
 	Status_check(0x03);
 	Write_command(0x98);
 	home_address();

@@ -1,7 +1,7 @@
 #include "util.h"
 
 
-double RelDif(double a, double b)
+double relative_difference(double a, double b)
 {
 	double c = u_abs(a);
 	double d = u_abs(b);
@@ -26,6 +26,19 @@ float distance_between(co_ord loc1, co_ord loc2)
 	
 	return RADIUS_EARTH*c;
 	
+}
+
+void clear_buf(buf_struct *in)
+{
+	memset(in->buf_ptr, 0, in->len);
+	
+	in->ptr = in->buf_ptr;
+	memset(in->eol, 0, 16);
+	
+	//for (int i = 0; i < 8; i++)
+		//in->eol[i] = 0;
+	//in->eol = {0,0,0,0,0,0,0,0};
+	in->eol_i = 1;
 }
 
 /*

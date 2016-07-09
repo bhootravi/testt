@@ -56,8 +56,17 @@
 #include <compiler.h>
 #include <status_codes.h>
 
+// From module: DACC - Digital-to-Analog Converter
+#include <dacc.h>
+
 // From module: Delay routines
 #include <delay.h>
+
+// From module: FatFS file system
+#include <diskio.h>
+#include <ff.h>
+#include <ffconf.h>
+#include <integer.h>
 
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
@@ -71,6 +80,9 @@
 // From module: Interrupt management - SAM implementation
 #include <interrupt.h>
 
+// From module: Memory Control Access Interface
+#include <ctrl_access.h>
+
 // From module: PIO - Parallel Input/Output Controller
 #include <pio.h>
 
@@ -81,14 +93,42 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: RTC - Real Time Clock
+#include <rtc.h>
+
 // From module: SAM4S-EK2 LED support enabled
 #include <led.h>
+
+// From module: SD/MMC Memory Control Access - Enable
+#include <sd_mmc_mem.h>
+
+// From module: SD/MMC stack on SPI interface
+#include <sd_mmc.h>
+
+// From module: SPI - SAM Implementation
+#include <spi_master.h>
+#include <spi_master.h>
+
+// From module: SPI - Serial Peripheral Interface
+#include <spi.h>
+
+// From module: Standard serial I/O (stdio) - SAM implementation
+#include <stdio_serial.h>
+
+// From module: Supported ports of FatFS
+#include <diskio.h>
 
 // From module: System Clock Control - SAM4S implementation
 #include <sysclk.h>
 
+// From module: TC - Timer Counter
+#include <tc.h>
+
 // From module: UART - Univ. Async Rec/Trans
 #include <uart.h>
+
+// From module: USART - Serial interface - SAM implementation for devices with both UART and USART
+#include <serial.h>
 
 // From module: USART - Univ. Syn Async Rec/Trans
 #include <usart.h>

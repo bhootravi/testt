@@ -36,6 +36,7 @@ int16_t temp_audio_buf[AUDIO_BUF_SIZE];
 uint16_t audio_data_0[AUDIO_BUF_SIZE/2], audio_data_1[AUDIO_BUF_SIZE/2];
 //pointer for data to be fed to DAC
 volatile uint16_t *audio_data_ptr = &audio_data_0[0];
+volatile uint16_t *read_data_ptr = &audio_data_1[0];
 
 //Feed DAC with data at the sampling rate of file
 void SysTick_Handler(void)
@@ -165,15 +166,17 @@ void play()
 	//printf("entering loop\n\r");
 	
 	//update the pointer used to fetch data for DAC
-	if(!data_arr)
+	if(data_arr == 0)
 	{
-		audio_data_ptr = &audio_data_1[0];
+		audio_data_ptr = &audio_data_0[0];
+		read_data_ptr = &audio_data_1[0];
 		//printf("change from 0 to 1\n\r");
 		data_arr = 1;
 	}
 	else
 	{
-		audio_data_ptr = &audio_data_0[0];
+		audio_data_ptr = &audio_data_1[0];
+		read_data_ptr = &audio_data_0[0];
 		//printf("change from 1 to 0\n\r");
 		data_arr = 0;
 	}
@@ -196,23 +199,26 @@ void play()
 		{
 			int32_t temp2 = (int32_t)temp_audio_buf[i] + 32767;
 			temp = (uint16_t)(temp2 & 0xFFFF);
-			*(audio_data_ptr+j) = DATA_BITS > DAC_BITS ?
+			*(read_data_ptr+j) = DATA_BITS > DAC_BITS ?
 									(temp >> (DATA_BITS - DAC_BITS)) :
 									(temp);
 		}
 		
 		//wait for playback to get over
 		while(t < AUDIO_BUF_SIZE/2);
-		//switch the pointers of playback and data buffer
-		if(!data_arr)
+		
+		//update the pointer used to fetch data for DAC
+		if(data_arr == 0)
 		{
-			audio_data_ptr = &audio_data_1[0];
+			audio_data_ptr = &audio_data_0[0];
+			read_data_ptr = &audio_data_1[0];
 			//printf("change from 0 to 1\n\r");
 			data_arr = 1;
 		}
 		else
 		{
-			audio_data_ptr = &audio_data_0[0];
+			audio_data_ptr = &audio_data_1[0];
+			read_data_ptr = &audio_data_0[0];
 			//printf("change from 1 to 0\n\r");
 			data_arr = 0;
 		}

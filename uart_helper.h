@@ -16,22 +16,6 @@
 #define DEBUG_SERIAL_IRQn			 UART0_IRQn
 #define DEBUG_SERIAL_Handler		 UART0_Handler
 
-#define GPS_SERIAL					 USART1
-#define GPS_SERIAL_ID				 ID_USART1  //USART0 for sam4l
-#define GPS_SERIAL_BAUDRATE			 9600
-#define GPS_SERIAL_CHAR_LENGTH		 US_MR_CHRL_8_BIT
-#define GPS_SERIAL_PARITY			 US_MR_PAR_NO
-#define GPS_SERIAL_STOP_BIT			 US_MR_NBSTOP_1_BIT
-#define GPS_SERIAL_IRQn				 USART1_IRQn
-#define GPS_SERIAL_Handler			 USART1_Handler
-
-
-#define GPS_BUF_LEN	500
-
-extern volatile uint8_t tx_flag;
-
-uint8_t common_buf[GPS_BUF_LEN];
-extern volatile buf_struct gps_buf;
 
 
 //extern const sam_uart_opt_t uart0_settings;

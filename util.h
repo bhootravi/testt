@@ -5,6 +5,7 @@
 #include "datatypes.h"
 #include <math.h>
 #include <string.h>
+#include "ring_buf.h"
 
 //#include <arm_math.h>
 //#include <fastmath.h>
@@ -23,8 +24,5 @@ double relative_difference(double a, double b);
 
 //calculate distance between two co-ordinates in meters
 float distance_between(co_ord loc1, co_ord loc2);
-
-//re-initialize the buffer
-void clear_buf(buf_struct* in);
 
 #endif /* UTIL_H_ */

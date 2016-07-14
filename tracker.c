@@ -20,8 +20,36 @@ float temp_dist = 0;
 int tracker_process()
 {
 	//gps_get_data();
-	int x = gps_process_data();
+	//int x = gps_process_data();
+	int16_t temp = 0;
+	int8_t line[80];
+	//printf("tracker tx flag %d\n\r", tx_flag);
+	while(tx_flag)
+	{
+		do
+		{
+			*(line+temp) = RB_pop(gps_buf);
+			temp++;
+		} while (*(line+temp-1) != '\n');
+		tx_flag--;
+		if(*(line+temp-1) == '\n' && *(line+temp-2) == '\r')
+		{
+			printf("got a valid string\n\r");
+			
+			temp -= 2;
+			*(line+temp) = *(line+temp + 1) = 0;
+		}
+		else
+		{
+			printf("error condition in gps receive\n\r");
+		}
+		printf("len = %d\n\r", temp);
+		temp = gps_process_data((const char*)line);
+		
+		temp = 0;
+	}
 	
+	/*
 	//if data received is valid
 	if(x == 0)
 	{
@@ -128,5 +156,6 @@ int tracker_process()
 		
 		//put default error message
 	}
+	*/
 	return 0;
 }

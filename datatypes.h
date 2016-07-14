@@ -8,6 +8,7 @@
 #define TRAIN_NO_LEN 6
 #define TRAIN_NAME_LEN 120
 
+/*
 typedef struct  
 {
 	uint8_t *buf_ptr;
@@ -16,6 +17,7 @@ typedef struct
 	uint16_t eol[8];
 	uint8_t eol_i;
 }buf_struct;
+*/
 
 typedef struct  
 {

@@ -60,10 +60,8 @@ void SysTick_Handler(void)
 
 void audio_init()
 {
-	
 	sysclk_enable_peripheral_clock(AUDIO_OUT_ID);
 	dacc_reset(DACC);
-	
 	
 	/* Half word(16 bit) transfer mode */
 	dacc_set_transfer_mode(DACC, 0);
@@ -72,7 +70,6 @@ void audio_init()
 		
 	dacc_set_channel_selection(DACC, 0);
 	dacc_set_analog_control(DACC, DACC_ANALOG_CONTROL);
-	
 }
 
 //TODO - check DAC active or not before opening new file
@@ -135,6 +132,8 @@ int audio_open_file(char* file_name)
 	uint16_t j = 0;
 	for (int i = 0; i < AUDIO_BUF_SIZE; i = i+2, j++) {
 		int32_t temp2 = (int32_t)temp_audio_buf[i] + 32767;
+		if(temp2 == 32767)
+			temp2 = 0;
 		temp = (uint16_t)(temp2 & 0xFFFF);
 		*(audio_data_ptr+j) = DATA_BITS > DAC_BITS ?	
 								(temp >> (DATA_BITS - DAC_BITS)) :

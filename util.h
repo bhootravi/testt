@@ -10,6 +10,13 @@
 //#include <arm_math.h>
 //#include <fastmath.h>
 
+#define bit_get(p,m) ((p) & (m))
+#define bit_set(p,m) ((p) |= (m))
+#define bit_clear(p,m) ((p) &= ~(m))
+#define bit_flip(p,m) ((p) ^= (m))
+#define bit_write(c,p,m) (c ? bit_set(p,m) : bit_clear(p,m))
+#define BIT(x) (0x01 << (x))
+
 //math functions used for calculations
 #define u_abs(x)		((x) < 0 ? -(x) : (x))
 #define u_max(a, b)		((a) > (b) ? (a) : (b))

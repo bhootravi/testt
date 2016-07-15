@@ -41,15 +41,8 @@ struct minmea_float {
 };
 
 
-struct minmea_time {
-    int hours;
-    int minutes;
-    int seconds;
-    int microseconds;
-};
-
 struct minmea_sentence_rmc {
-    struct minmea_time time;
+    time_struct time;
     bool valid;
     struct minmea_float latitude;
     struct minmea_float longitude;
@@ -60,7 +53,7 @@ struct minmea_sentence_rmc {
 };
 
 struct minmea_sentence_gga {
-    struct minmea_time time;
+    time_struct time;
     struct minmea_float latitude;
     struct minmea_float longitude;
     int fix_quality;
@@ -90,13 +83,13 @@ enum minmea_faa_mode {
 struct minmea_sentence_gll {
     struct minmea_float latitude;
     struct minmea_float longitude;
-    struct minmea_time time;
+    time_struct time;
     char status;
     char mode;
 };
 
 struct minmea_sentence_gst {
-    struct minmea_time time;
+    time_struct time;
     struct minmea_float rms_deviation;
     struct minmea_float semi_major_deviation;
     struct minmea_float semi_minor_deviation;

@@ -22,8 +22,9 @@ int tracker_process()
 	//gps_get_data();
 	//int x = gps_process_data();
 	int16_t temp = 0;
-	int8_t line[80];
+	int8_t line[80], x = 0;
 	//printf("tracker tx flag %d\n\r", tx_flag);
+	
 	while(tx_flag)
 	{
 		do
@@ -34,8 +35,7 @@ int tracker_process()
 		tx_flag--;
 		if(*(line+temp-1) == '\n' && *(line+temp-2) == '\r')
 		{
-			printf("got a valid string\n\r");
-			
+			//printf("got a valid string\n\r");
 			temp -= 2;
 			*(line+temp) = *(line+temp + 1) = 0;
 		}
@@ -44,17 +44,18 @@ int tracker_process()
 			printf("error condition in gps receive\n\r");
 		}
 		printf("len = %d\n\r", temp);
-		temp = gps_process_data((const char*)line);
+		x += gps_process_data((const char*)line);
 		
 		temp = 0;
 	}
 	
-	/*
+	train_status.cur_gps_data = gps_reading;
+	
 	//if data received is valid
-	if(x == 0)
+	if(x >= 0)
 	{
-		//compute the distance to dest station
-		//WON'T WORK
+		//computing the distance to dest station
+		//WON'T WORK because the method calculates the shortest path
 		train_status.dist_to_dest_sta = distance_between
 							(train_status.cur_gps_data.cur_loc, 
 								train_status.train_data->dest->location);
@@ -156,6 +157,6 @@ int tracker_process()
 		
 		//put default error message
 	}
-	*/
+
 	return 0;
 }

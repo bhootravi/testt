@@ -280,7 +280,7 @@ bool minmea_scan(const char *sentence, const char *format, ...)
             } break;
 
             case 'T': { // Time (int, int, int, int), -1 if empty.
-                struct minmea_time *time_ = va_arg(ap, struct minmea_time *);
+                time_struct *time_ = va_arg(ap, time_struct *);
 
                 int h = -1, i = -1, s = -1, u = -1;
 

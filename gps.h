@@ -19,9 +19,10 @@ Provides helper functions for tracker to:
 
 extern volatile uint8_t tx_flag;
 
-volatile int8_t common_buf[GPS_BUF_LEN];
-
+//extern volatile int8_t common_buf[GPS_BUF_LEN];
 extern volatile ring_buffer* gps_buf;
+
+extern gps_data gps_reading; 
 
 #define ALL_INTERRUPT_MASK  0xffffffff
 

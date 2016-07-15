@@ -27,9 +27,10 @@ typedef struct
 
 typedef struct 
 {
-	uint8_t hour;
-	uint8_t minute;
-	uint8_t second;
+	uint8_t hours;
+	uint8_t minutes;
+	uint8_t seconds;
+	uint16_t microseconds;
 }time_struct;
 
 typedef struct 
@@ -48,10 +49,19 @@ typedef struct
 
 typedef struct 
 {
+	uint8_t flags;
+	uint8_t invalid_counts;
+	
 	co_ord cur_loc;
 	float speed;
 	timeDate_struct timeDate;  
 }gps_data;
+
+enum gps_flag_enum
+{
+	GPS_INVALID,
+	GPS_RESTARTED
+};
 
 typedef struct
 {

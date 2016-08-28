@@ -75,7 +75,7 @@ int main (void)
 	
 	uart_h_init();
 	
-		
+	/*	
 	sd_mmc_init();
 	
 	audio_init();
@@ -85,15 +85,110 @@ int main (void)
 		printf("open error\n\r");
 	}
 	printf("file open successful\n\r");
-	
+	*/
 	gps_init();
 	
 	//play();
+	
 	//graphicLcd_init();
 	//sam_uart_opt uart0_settings;
 	/* Insert application code here, after the board has been initialized. */
 
 	printf("test\n\r");
+	
+	station bandra = 
+	{
+		.code = "BCT",
+		.location.lat = 19.0624,
+		.location.lon = 72.8410,
+		.halt.arrival.d = {0},
+		.halt.arrival.t = {0,0,0,0},
+		.halt.departure.d = {0},
+		.halt.departure.t = {0,0,0,0},
+		.halt.platform_no = 1,
+		.halt.distance_to_next = 18.4,
+		.name_eng = "BANDRA TERMINUS",
+		.reg_lang = 2
+	};
+	
+	station borivali =
+	{
+		.code = "BVI",
+		.location.lat = 19.2303,
+		.location.lon = 72.8577,
+		.halt.arrival.d = {0},
+		.halt.arrival.t = {0,0,0,0},
+		.halt.departure.d = {0},
+		.halt.departure.t = {0,0,0,0},
+		.halt.platform_no = 1,
+		.halt.distance_to_next = 68.4,
+		.name_eng = "BORIVALI",
+		.reg_lang = 1
+	};
+	
+	station boisar =
+	{
+		.code = "BOR",
+		.location.lat = 19.7983,
+		.location.lon = 72.7616,
+		.halt.arrival.d = {0},
+		.halt.arrival.t = {0,0,0,0},
+		.halt.departure.d = {0},
+		.halt.departure.t = {0,0,0,0},
+		.halt.platform_no = 1,
+		.halt.distance_to_next = 70.2,
+		.name_eng = "BOISAR",
+		.reg_lang = 1
+	};
+	
+	station vapi =
+	{
+		.code = "VAPI",
+		.location.lat = 20.3737,
+		.location.lon = 72.9086,
+		.halt.arrival.d = {0},
+		.halt.arrival.t = {0,0,0,0},
+		.halt.departure.d = {0},
+		.halt.departure.t = {0,0,0,0},
+		.halt.platform_no = 1,
+		.halt.distance_to_next = 94.8,
+		.name_eng = "VAPI",
+		.reg_lang = 1
+	};
+	
+	station surat = 
+	{
+		.code = "ST",
+		.location.lat = 21.2049,
+		.location.lon = 72.8408,
+		.halt.arrival.d = {0},
+		.halt.arrival.t = {0,0,0,0},
+		.halt.departure.d = {0},
+		.halt.departure.t = {0,0,0,0},
+		.halt.platform_no = 1,
+		.halt.distance_to_next = -2,
+		.name_eng = "SURAT",
+		.reg_lang = 1
+	};
+	
+	// IMPORTANT - use str copy or memcpy in final version
+	
+	memcpy(train_status.train_details.number, "19021", 5);
+	train_status.train_details.direction = 0;
+	memcpy(train_status.train_details.name_eng, "Mumbai Bandra (T.) - Lucknow (Weekly) Express", 45);
+	train_status.train_details.stops_count = 5;
+	train_status.train_details.type = 0;
+	train_status.train_details.src = &bandra;
+	train_status.train_details.dest = &surat;
+	
+	train_status.cur_sta = &bandra;
+	train_status.cur_tracker_state = SOURCE;
+	train_status.dist_to_next_sta = bandra.halt.distance_to_next;
+	train_status.dist_traveled_last = 0;
+	//train_status.dist_to_dest_sta = 251.9;
+	train_status.next_sta = &borivali;
+	train_status.prev_tracker_state= ERROR;
+	train_status.flags |= 8;
 	
 	while(1)
 	{

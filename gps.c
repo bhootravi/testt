@@ -18,7 +18,6 @@ void GPS_SERIAL_Handler(void)
 	{	
 		ua_status = 0;
 		usart_getchar(GPS_SERIAL, &ua_status);
-		
 		RB_push(gps_buf, ua_status&0xFF);
 		if( (ua_status&0xFF) == '\n')
 			tx_flag ++;
@@ -68,8 +67,10 @@ int gps_process_data(const char* line)
 					gps_reading.timeDate.d = frame.date;
 					gps_reading.timeDate.t = frame.time;
 				}
+				gps_reading.invalid_counts++;
 			}
 			else {
+				gps_reading.invalid_counts++;
 				printf(INDENT_SPACES "$xxRMC sentence is not parsed\r\n");
 				return -1;
 			}

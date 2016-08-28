@@ -23,7 +23,9 @@ enum tracker_states
 	ERROR
 };
 */
-extern train_struct* cur_train;
+
+//extern train_struct* cur_train;
+extern train_status_struct train_status;
 extern station* prev_sta, cur_sta, next_sta;
 
 station* get_next_station(void);

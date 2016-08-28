@@ -22,9 +22,10 @@
 #define u_max(a, b)		((a) > (b) ? (a) : (b))
 #define u_radians(x)	(((x) * M_PI) / 180.0)
 
-#define	RADIUS_EARTH	6371000.0
+//#define	RADIUS_EARTH	6371000.0
+#define	RADIUS_EARTH	6371.0
 //tolerance level for result of RelDif
-#define TOLERANCE_DIF	0.001
+#define TOLERANCE_DIF	0.1
 
 //computes relative difference of two rational numbers to compare them
 double relative_difference(double a, double b);

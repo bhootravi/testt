@@ -68,6 +68,7 @@ typedef struct
 	timeDate_struct arrival;
 	timeDate_struct departure;
 	uint8_t platform_no;
+	uint16_t distance_to_next;
 }halt_details;
 
 typedef struct
@@ -78,7 +79,7 @@ typedef struct
 	uint8_t name_eng[STA_NAME_LEN];
 	uint8_t name_hin[STA_NAME_LEN];
 	uint8_t name_reg[STA_NAME_LEN];
-	halt_details* halt;
+	halt_details halt;
 }station;
 
 typedef struct
@@ -87,10 +88,13 @@ typedef struct
 	uint8_t name_eng[TRAIN_NAME_LEN];
 	uint8_t name_hin[TRAIN_NAME_LEN];
 	uint8_t name_reg[TRAIN_NAME_LEN];
-	uint16_t stops;
+	
+	uint16_t stops_count;
+	
 	station* src;
 	station* dest;
 	//????//halt_station* tt_tail;
+	
 	uint8_t type;
 	uint8_t direction;
 	////////intermediate stops
@@ -99,13 +103,13 @@ typedef struct
 typedef enum
 {
 	SOURCE,
-	DESTINATION,
-	TOGO_5KM,
-	TOGO_1KM,
-	ENROUTE,
-	STATION_REACHED,
 	CROSSED_1KM,
 	CROSSED_3KM,
+	ENROUTE,
+	TOGO_5KM,
+	TOGO_1KM,
+	STATION_REACHED,
+	DESTINATION,
 	WRONG_DIRECTION,
 	GPS_WEAK,
 	//GPS_LOST,
@@ -115,13 +119,16 @@ typedef enum
 
 typedef struct
 {
-	train_struct* train_data;
+	train_struct train_details;
+	
+	uint8_t flags;
 	
 	station* cur_sta;
 	station* next_sta;
 	
 	gps_data cur_gps_data;
 	
+	float dist_traveled_last;
 	float dist_to_next_sta;
 	float dist_to_dest_sta;
 	

@@ -7,6 +7,8 @@
 train_status_struct train_status;
 //station* prev_sta, cur_sta, next_sta;
 
+extern station station_list[];
+
 //tracker_states cur_state = ERROR, prev_state = ERROR;
 uint8_t flags_1 = 0;
 
@@ -17,6 +19,7 @@ uint8_t flags_1 = 0;
 
 int tracker_process()
 {
+	static int iii = 1;
 	//gps_get_data();
 	//int x = gps_process_data();
 	int16_t temp = 0;
@@ -90,8 +93,8 @@ int tracker_process()
 		//train_status.dist_to_dest_sta -= distance_covered;
 		train_status.dist_traveled_last += distance_covered;
 		
-		train_status.dist_to_next_sta = distance_between(train_status.cur_gps_data.cur_loc, 
-															train_status.next_sta->location);
+		train_status.dist_to_next_sta = distance_between(train_status.next_sta->location,  
+															gps_reading.cur_loc);
 		//compute the distance to next station
 		/*
 		train_status.dist_to_next_sta = distance_between
@@ -109,12 +112,14 @@ int tracker_process()
 		printf("\t dist traveled %s\n\r", te);
 		printf("--------------------------------------\n");
 		float rad;
+		//TODO check location reached on halt
+		//TODO check timing bounds on state change
 		switch(train_status.cur_tracker_state)
 		{
 			case SOURCE:
 				rad = 1.0;
 				//opposite bearings
-				if((relative_difference(train_status.dist_traveled_last, 1.0) < TOLERANCE_DIF))
+				if(train_status.dist_traveled_last > rad - TOLERANCE_DIF)
 				{
 					train_status.cur_tracker_state = CROSSED_1KM;
 						
@@ -122,10 +127,33 @@ int tracker_process()
 					//repeat times 3 audio, display loop
 				}
 				break;
+			case CROSSED_1KM:
+				rad = 3.0;
+				//check next sta data updated flag
+				
+				//adjustment to avoid storage of prev station
+				if(train_status.dist_traveled_last > rad - TOLERANCE_DIF)
+				{
+					train_status.cur_tracker_state = CROSSED_3KM;
+					
+					//update message
+					//repeat times 3 audio, display loop
+				}
+				break;
+			case CROSSED_3KM:
+				rad = 5.0;
+				if(train_status.dist_traveled_last > rad - TOLERANCE_DIF)
+				{
+					train_status.cur_tracker_state = ENROUTE;
+				
+					//update message
+					//repeat times 3 audio, display loop
+				}
+				break;
 			case ENROUTE:
 				rad = 5.0;
 				//if course over ground == bearing of the station
-				if((relative_difference(train_status.dist_to_next_sta, 5.0) < TOLERANCE_DIF/5))
+				if(train_status.dist_to_next_sta < rad - TOLERANCE_DIF)
 				{
 					train_status.cur_tracker_state = TOGO_5KM;
 					//update message
@@ -135,8 +163,7 @@ int tracker_process()
 			case TOGO_5KM:
 				rad = 1.0;
 				//if course over ground == bearing of the station
-				if((relative_difference(train_status.dist_to_next_sta, 1.0) < TOLERANCE_DIF)
-					|| train_status.dist_to_next_sta < 0.9)
+				if(train_status.dist_to_next_sta < rad - TOLERANCE_DIF)
 				{
 					train_status.cur_tracker_state = TOGO_1KM;
 					//update message
@@ -144,11 +171,18 @@ int tracker_process()
 				}
 				break;
 			case TOGO_1KM:
-				rad = 0.050;
-				if((relative_difference(train_status.dist_to_next_sta, 0.050) < TOLERANCE_DIF)
-					|| train_status.dist_to_next_sta < 0.05)
+				rad = 0.1;
+				if(train_status.dist_to_next_sta < rad)//////check the rad & condition before changing
 				{
+					//TODO check for halt before changing station
 					train_status.cur_tracker_state = STATION_REACHED;
+					//free train_status.cur_sta
+					train_status.cur_sta = train_status.next_sta;
+					if(iii < 4)
+						train_status.next_sta = &station_list[++iii];
+					else
+						train_status.next_sta = NULL;
+					//update next station info
 					train_status.dist_traveled_last = 0;
 					
 					if (train_status.next_sta == NULL)
@@ -163,40 +197,12 @@ int tracker_process()
 			case STATION_REACHED:				
 				rad = 1.0;
 				//opposite bearings										
-				if((relative_difference(train_status.dist_traveled_last, 1.0) < TOLERANCE_DIF)
-					|| train_status.dist_traveled_last > 1.1)
+				if(train_status.dist_traveled_last > rad - TOLERANCE_DIF)
 				{
 					train_status.cur_tracker_state = CROSSED_1KM;
-					//free train_status.cur_sta
-					train_status.cur_sta = train_status.next_sta;
-					train_status.next_sta = NULL;
-					//update next station info
-					
+										
 					//update message
 					//repeat times 3 audio, display loop		
-				}
-				break;
-			case CROSSED_1KM:
-				//check next sta data updated flag
-				
-				//adjustment to avoid storage of prev station
-				if((relative_difference(train_status.dist_traveled_last, 3.0) < TOLERANCE_DIF)
-					|| train_status.dist_traveled_last > 3.1)
-				{
-					train_status.cur_tracker_state = CROSSED_3KM;
-					
-					//update message
-					//repeat times 3 audio, display loop
-				}
-				break;
-			case CROSSED_3KM:
-				if((relative_difference(train_status.dist_traveled_last, 5.0) < TOLERANCE_DIF)
-					|| train_status.dist_traveled_last > 5.1)
-				{
-					train_status.cur_tracker_state = ENROUTE;
-				
-					//update message
-					//repeat times 3 audio, display loop
 				}
 				break;
 			case DESTINATION:

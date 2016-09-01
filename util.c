@@ -1,6 +1,5 @@
 #include "util.h"
 
-
 double relative_difference(double a, double b)
 {
 	double c = u_abs(a);
@@ -14,18 +13,21 @@ double relative_difference(double a, double b)
 //convention - loc1 
 float distance_between(co_ord loc1, co_ord loc2)
 {
-	float lat1 = u_radians(loc1.lat);
-	float lat2 = u_radians(loc2.lat);
-	float d_lat = lat1 - lat2;
-	float d_lon = u_radians(loc1.lon - loc2.lon);
+	double lat1 = u_radians(loc1.lat);
+	double lat2 = u_radians(loc2.lat);
+	double d_lat = lat1 - lat2;
+	double d_lon = u_radians(loc1.lon - loc2.lon);
 	
-	float a = sin(d_lat) * sin(d_lat)
-					+ sin(lat1) * sin(lat2)
-						* sin(d_lon) * sin(d_lon);
-	float c = 2 * atan2(sqrt(a), sqrt(1-a));
+	double a = sin(d_lat/2) * sin(d_lat/2)
+					+ cos(lat1) * cos(lat2)
+						* sin(d_lon/2) * sin(d_lon/2);
+	//reusing lat1 and lat2
+	lat1 = sqrt(a);
+	lat2 = sqrt(1-a);
+	
+	double c = 2 * atan2(lat1, lat2);
 	
 	return RADIUS_EARTH*c;
-	
 }
 
 /*

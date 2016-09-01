@@ -25,7 +25,7 @@
 //#define	RADIUS_EARTH	6371000.0
 #define	RADIUS_EARTH	6371.0
 //tolerance level for result of RelDif
-#define TOLERANCE_DIF	0.1
+#define TOLERANCE_DIF	0.05
 
 //computes relative difference of two rational numbers to compare them
 double relative_difference(double a, double b);

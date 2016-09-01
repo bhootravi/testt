@@ -44,7 +44,7 @@ char test_file_name[] = "test_16khz.wav";
 
 int gps_data_rx = 0;
 
-
+station station_list[5];
 
 /*
 int self_test(void)
@@ -96,7 +96,8 @@ int main (void)
 
 	printf("test\n\r");
 	
-	station bandra = 
+	
+	station_list[0] = (station)
 	{
 		.code = "BCT",
 		.location.lat = 19.0624,
@@ -111,7 +112,7 @@ int main (void)
 		.reg_lang = 2
 	};
 	
-	station borivali =
+	station_list[1] = (station)
 	{
 		.code = "BVI",
 		.location.lat = 19.2303,
@@ -126,7 +127,7 @@ int main (void)
 		.reg_lang = 1
 	};
 	
-	station boisar =
+	station_list[2] = (station)
 	{
 		.code = "BOR",
 		.location.lat = 19.7983,
@@ -141,7 +142,7 @@ int main (void)
 		.reg_lang = 1
 	};
 	
-	station vapi =
+	station_list[3] = (station)
 	{
 		.code = "VAPI",
 		.location.lat = 20.3737,
@@ -156,7 +157,7 @@ int main (void)
 		.reg_lang = 1
 	};
 	
-	station surat = 
+	station_list[4] = (station)
 	{
 		.code = "ST",
 		.location.lat = 21.2049,
@@ -178,16 +179,18 @@ int main (void)
 	memcpy(train_status.train_details.name_eng, "Mumbai Bandra (T.) - Lucknow (Weekly) Express", 45);
 	train_status.train_details.stops_count = 5;
 	train_status.train_details.type = 0;
-	train_status.train_details.src = &bandra;
-	train_status.train_details.dest = &surat;
+	train_status.train_details.src = &station_list[0];
+	train_status.train_details.dest = &station_list[4];
 	
-	train_status.cur_sta = &bandra;
+	train_status.cur_sta = &station_list[0];
 	train_status.cur_tracker_state = SOURCE;
-	train_status.dist_to_next_sta = bandra.halt.distance_to_next;
+	train_status.dist_to_next_sta = station_list[0].halt.distance_to_next;
 	train_status.dist_traveled_last = 0;
 	//train_status.dist_to_dest_sta = 251.9;
-	train_status.next_sta = &borivali;
+	train_status.next_sta = &station_list[1];
+	 
 	train_status.prev_tracker_state= ERROR;
+	//TODO fix
 	train_status.flags |= 8;
 	
 	while(1)
